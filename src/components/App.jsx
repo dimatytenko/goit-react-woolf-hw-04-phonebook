@@ -6,15 +6,14 @@ import { Filter } from './Filter';
 import { ContactForm } from './ContactForm';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(
+    JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? []
+  );
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const savedContacts = localStorage.getItem(STORAGE_KEY);
-    if (savedContacts) {
-      setContacts(JSON.parse(savedContacts));
-    }
-  }, []);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
   const deleteContact = id => {
     setContacts(prev => prev.filter(contact => contact.id !== id));
@@ -41,8 +40,6 @@ export const App = () => {
     }
     const updatedContacts = [...contacts, newContact];
     setContacts(updatedContacts);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedContacts));
-
     return true;
   };
 
